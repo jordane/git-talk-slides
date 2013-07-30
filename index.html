@@ -66,14 +66,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=1024" />
+    <meta name="viewport" content="width=1300" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>impress.js | presentation tool based on the power of CSS3 transforms and transitions in modern browsers | by Bartek Szopka @bartaz</title>
+    <title>Git Plumbing</title>
     
-    <meta name="description" content="impress.js is a presentation tool based on the power of CSS3 transforms and transitions in modern browsers and inspired by the idea behind prezi.com." />
-    <meta name="author" content="Bartek Szopka" />
+    <meta name="description" content="Git plumbing is the low level internals of git" />
+    <meta name="author" content="Jordan Evans" />
 
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
 
     <!--
         
@@ -90,7 +89,9 @@
         When creating your own presentation get rid of this file. Start from scratch, it's fun!
         
     -->
-    <link href="css/impress-demo.css" rel="stylesheet" />
+    <link href="css/default.css" rel="stylesheet" />
+    <link href="css/font.css" rel="stylesheet" />
+    <link href="css/sunburst.css" rel="stylesheet" />
     
     <link rel="shortcut icon" href="favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -164,8 +165,9 @@
         It will not be rotated or scaled.
         
     -->
-    <div id="bored" class="step slide" data-x="-1000" data-y="-1500">
-        <q>Aren't you just <b>bored</b> with all those slides-based presentations?</q>
+    <div id="introduction" class="step slide" data-x="-1000" data-y="-1500">
+        <h1>Git</h1>
+        <h2>Porcelain and Plumbing</h2>
     </div>
 
     <!--
@@ -184,160 +186,256 @@
         
     -->
     <div class="step slide" data-x="0" data-y="-1500">
-        <q>Don't you think that presentations given <strong>in modern browsers</strong> shouldn't <strong>copy the limits</strong> of 'classic' slide decks?</q>
+        <h1>Hashes</h1>
+        <p>Input: basically a string</p>
+        <p>Output: fixed-size number</p>
+        <p>Deterministic</p>
+        <p>NOT Unique</p>
+        <p>Low probability of collisions</p>
+        <p>Fast</p>
+        <p>Typically represented by hexadecimal string</p>
+        <p>Git uses SHA-1, a 160 bit hash</p>
     </div>
 
     <div class="step slide" data-x="1000" data-y="-1500">
-        <q>Would you like to <strong>impress your audience</strong> with <strong>stunning visualization</strong> of your talk?</q>
+        <h1>Probability of Hash Collision</h1>
+        <p>N = number of possible hashes, (for SHA1 this is 2^160)</p>
+        <p>k = number of existing hashes</p>
+        <p>Probability of next hash colliding: </p><pre><code> 1/N * (1 + 2 + 3 + 4 + ... + k) = (k * (k - 1))/ (2 * N)</code></pre>
+        <p>MaaS core repo has 129,000 hashes</p>
+        <p>Probability of next MaaS hash colliding: </p><pre><code>So large python won't compute it with default types</code></pre>
+        <pre><code>Approximately 1e-40</pre></code>
     </div>
 
-    <!--
-        
-        This is an example of step element being scaled.
-        
-        Again, we use a `data-` attribute, this time it's `data-scale="4"`, so it means that this
-        element will be 4 times larger than the others.
-        From presentation and transitions point of view it means, that it will have to be scaled
-        down (4 times) to make it back to it's correct size.
-        
-    -->
-    <div id="title" class="step" data-x="0" data-y="0" data-scale="4">
-        <span class="try">then you should try</span>
-        <h1>impress.js<sup>*</sup></h1>
-        <span class="footnote"><sup>*</sup> no rhyme intended</span>
+    <div class="step slide" data-x="1500" data-y="-1500">
+        <h1>A git hash collision has happened. Once.</h1>
+        <p>https://twitter.com/bhearsum/status/360152893996793857</p>
+        <p>It will likely never happen again in our lifetimes</p>
     </div>
 
-    <!--
-        
-        This element introduces rotation.
-        
-        Notation shouldn't be a surprise. We use `data-rotate="90"` attribute, meaning that this
-        element should be rotated by 90 degrees clockwise.
-        
-    -->
-    <div id="its" class="step" data-x="850" data-y="3000" data-rotate="90" data-scale="5">
-        <p>It's a <strong>presentation tool</strong> <br/>
-        inspired by the idea behind <a href="http://prezi.com">prezi.com</a> <br/>
-        and based on the <strong>power of CSS3 transforms and transitions</strong> in modern browsers.</p>
+    <div class="step slide" data-x="2000" data-y="-1500">
+        <h1>Git Objects</h1>
+        <p>One of: blob, tree, commit</p>
+        <p>All objects have hashes (and all hashes in git correspond to an object)</p>
+        <p>Objects are stored by their hash (more about this later)</p>
+        <p>Fundamental building blocks of git</p>
     </div>
 
-    <div id="big" class="step" data-x="3500" data-y="2100" data-rotate="180" data-scale="6">
-        <p>visualize your <b>big</b> <span class="thoughts">thoughts</span></p>
+    <div class="step slide" data-x="2500" data-y="-1500">
+        <h1>Low-level Tools</h1>
+        <p>hash-object</p>
+        <p>cat-file</p>
+        <p>update-index</p>
+        <p>write-tree</p>
+        <p>commit-tree</p>
+        <p>rev-list</p>
+        <p>Read the git manpage for many more!</p>
     </div>
 
-    <!--
-        
-        And now it gets really exciting! We move into third dimension!
-        
-        Along with `data-x` and `data-y`, you can define the position on third (Z) axis, with
-        `data-z`. In the example below we use `data-z="-3000"` meaning that element should be
-        positioned far away from us (by 3000px).
-        
-    -->
-    <div id="tiny" class="step" data-x="2825" data-y="2325" data-z="-3000" data-rotate="300" data-scale="1">
-        <p>and <b>tiny</b> ideas</p>
+    <div class="step slide" data-x="3000" data-y="-1500">
+        <h1>Git Blob</h1>
+        <p>Stores data</p>
+        <p>Plain text, binary; any kind of data</p>
+        <p>Has no filename, is only referred to by hash</p>
     </div>
 
-    <!--
-        
-        This step here doesn't introduce anything new when it comes to data attributes, but you
-        should notice in the demo that some words of this text are being animated.
-        It's a very basic CSS transition that is applied to the elements when this step element is
-        reached.
-        
-        At the very beginning of the presentation all step elements are given the class of `future`.
-        It means that they haven't been visited yet.
-        
-        When the presentation moves to given step `future` is changed to `present` class name.
-        That's how animation on this step works - text moves when the step has `present` class.
-        
-        Finally when the step is left the `present` class is removed from the element and `past`
-        class is added.
-        
-        So basically every step element has one of three classes: `future`, `present` and `past`.
-        Only one current step has the `present` class.
-        
-    -->
-    <div id="ing" class="step" data-x="3500" data-y="-850" data-rotate="270" data-scale="6">
-        <p>by <b class="positioning">positioning</b>, <b class="rotating">rotating</b> and <b class="scaling">scaling</b> them on an infinite canvas</p>
+    <div class="step slide" data-x="3500" data-y="-1500">
+        <h1>Git Blob Example</h1>
+        <pre><code>jordane@ivysaur:~/tmp>mkdir git-test
+jordane@ivasaur:~/tmp>cd git-test
+jordane@ivysaur:~/tmp/git-test>git init
+Initialized empty Git repository in /Users/jordane/tmp/.git/
+jordane@ivysaur:~/tmp/git-test>echo "this is some file data" | git hash-object --stdin -w
+f87773f78e5a5120c28bb2926c33eacc8330d2f8</pre></code>
+        <p> This makes a new file in .git/objects</p>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>find .git/objects -type f
+.git/objects/f8/7773f78e5a5120c28bb2926c33eacc8330d2f8</pre></code>
     </div>
 
-    <div id="imagination" class="step" data-x="6700" data-y="-300" data-scale="6">
-        <p>the only <b>limit</b> is your <b class="imagination">imagination</b></p>
+    <div class="step slide" data-x="4000" data-y="-1500">
+        <h1>Git Blob Example</h1>
+        <p> Git objects are compressed with zlib. Lets decompress with zlib to find out what is inside!
+        <pre><code>jordane@ivysaur:~/tmp/git-test>cat .git/objects/f8/7773f78e5a5120c28bb2926c33eacc8330d2f8 \
+| python -c "import zlib,sys;print repr(zlib.decompress(sys.stdin.read()))"
+'blob 23\x00this is some file data\n'</pre></code>
+        <p>This deflates to</p>
+        <pre><code>object-type data_lengthNULLdata</pre></code>
+        <p>In other words, we make this git object ourselves, without git!</p>
     </div>
 
-    <div id="source" class="step" data-x="6300" data-y="2000" data-rotate="20" data-scale="4">
-        <p>want to know more?</p>
-        <q><a href="http://github.com/bartaz/impress.js">use the source</a>, Luke!</q>
+    <div class="step slide" data-x="4500" data-y="-1500">
+        <h1>Git Blob Example</h1>
+        <p>The hash of the object is then just the hash of the decompressed data</p>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>echo "blob 23\x00this is some file data" | sha1sum
+f87773f78e5a5120c28bb2926c33eacc8330d2f8</pre></code>
+        <p>Rather than deflating the object file, we can use git cat-file to view the object type and contents:</p>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>git cat-file -t f87773f78e5a5120c28bb2926c33eacc8330d2f8
+blob
+jordane@ivysaur:~/tmp/git-test>git cat-file -p f87773f78e5a5120c28bb2926c33eacc8330d2f8
+this is some file data
+jordane@ivysaur:~/tmp/git-test></pre></code>
     </div>
 
-    <div id="one-more-thing" class="step" data-x="6000" data-y="4000" data-scale="2">
-        <p>one more thing...</p>
+    <div class="step slide" data-x="5000" data-y="-1500">
+        <h1>Git Trees</h1>
+        <p>A tree is like a directory</p>
+        <p>It lists blobs or other trees</p>
+        <p>One line per git object, with object type, permissions, hash, name</p>
+        <p>Permissions tell git how to represent the object in the real file system: executable or not, symlink or regular file, etc</p>
+        <p>Typically trees are created from the index</p>
     </div>
 
-    <!--
-        
-        And the last one shows full power and flexibility of impress.js.
-        
-        You can not only position element in 3D, but also rotate it around any axis.
-        So this one here will get rotated by -40 degrees (40 degrees anticlockwise) around X axis and
-        10 degrees (clockwise) around Y axis.
-        
-        You can of course rotate it around Z axis with `data-rotate-z` - it has exactly the same effect
-        as `data-rotate` (these two are basically aliases).
-        
-    -->
-    <div id="its-in-3d" class="step" data-x="6200" data-y="4300" data-z="-100" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
-        <p><span class="have">have</span> <span class="you">you</span> <span class="noticed">noticed</span> <span class="its">it's</span> <span class="in">in</span> <b>3D<sup>*</sup></b>?</p>
-        <span class="footnote">* beat that, prezi ;)</span>
+    <div class="step slide" data-x="5500" data-y="-1500">
+        <h1>Index</h1>
+        <p>A tree from which commits are made</p>
+        <p>Files, directories, and changes have to be added to it with git-add (porcelain) or git-update-index (plumbing)</p>
+        <p>Exists in .git/index</p>
+        <p>NOT the same as a working tree</p>
+        <p>Generally is the tree of current HEAD + any staged changes</p>
     </div>
 
-    <!--
-        
-        So to make a summary of all the possible attributes used to position presentation steps, we have:
-        
-        * `data-x`, `data-y`, `data-z` - they define the position of **the center** of step element on
-            the canvas in pixels; their default value is 0;
-        * `data-rotate-x`, `data-rotate-y`, 'data-rotate-z`, `data-rotate` - they define the rotation of
-            the element around given axis in degrees; their default value is 0; `data-rotate` and `data-rotate-z`
-            are exactly the same;
-        * `data-scale` - defines the scale of step element; default value is 1
-        
-        These values are used by impress.js in CSS transformation functions, so for more information consult
-        CSS transfrom docs: https://developer.mozilla.org/en/CSS/transform
-        
-    -->
-    <div id="overview" class="step" data-x="3000" data-y="1500" data-scale="10">
+    <div class="step slide" data-x="6000" data-y="-1500">
+        <h1>Working Tree</h1>
+        <p>The files as they currently are in your local clone</p>
+        <p>Not actually required to make a commit, but extremely difficult without it</p>
+        <p>Often is similar to index, but not the same</p>
+        <p>`git diff` returns the diff between index and working tree, by default</p>
     </div>
 
-</div>
+    <div class="step slide" data-x="6500" data-y="-1500">
+        <h1>Commit from Index</h1>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>git update-index --add --cacheinfo 100644 \
+f87773f78e5a5120c28bb2926c33eacc8330d2f8 some_path/filename
+jordane@ivysaur:~/tmp/git-test>git ls-files
+some_path/files
+jordane@ivysaur:~/tmp/git-test>git write-tree # Turns index into a tree object
+6ce4acd2e063f36bddf11c1c7ee9bf02178be70e
+jordane@ivysaur:~/tmp/git-test>git commit-tree -m "initial commit" \
+6ce4acd2e063f36bddf11c1c7ee9bf02178be70e # No parent commit, so no -p
+ec5141f9cea7967e1078ed3e164f57db8999e229
+jordane@ivysaur:~/tmp/git-test>git cat-file -t ec5141f9cea7967e1078ed3e164f57db8999e229
+commit
+jordane@ivysaur:~/tmp/git-test>git cat-file -p ec5141f9cea7967e1078ed3e164f57db8999e229
+tree 6ce4acd2e063f36bddf11c1c7ee9bf02178be70e
+author Jordan Evans <jordan.evans@rackspace.com> 1375200783 -0700
+committer Jordan Evans <jordan.evans@rackspace.com> 1375200783 -0700
 
-<!--
-    
-    Hint is not related to impress.js in any way.
-    
-    But it can show you how to use impress.js features in creative way.
-    
-    When the presentation step is shown (selected) its element gets the class of "active" and the body element
-    gets the class based on active step id `impress-on-ID` (where ID is the step's id)... It may not be
-    so clear because of all these "ids" in previous sentence, so for example when the first step (the one with
-    the id of `bored`) is active, body element gets a class of `impress-on-bored`.
-    
-    This class is used by this hint below. Check CSS file to see how it's shown with delayed CSS animation when
-    the first step of presentation is visible for a couple of seconds.
-    
-    ...
-    
-    And when it comes to this piece of JavaScript below ... kids, don't do this at home ;)
-    It's just a quick and dirty workaround to get different hint text for touch devices.
-    In a real world it should be at least placed in separate JS file ... and the touch content should be
-    probably just hidden somewhere in HTML - not hard-coded in the script.
-    
-    Just sayin' ;)
-    
--->
-<div class="hint">
-    <p>Use a spacebar or arrow keys to navigate</p>
+initial commit
+jordane@ivysaur:~/tmp/git-test>ls -a
+./ ../ .git/</pre></code>
+    </div>
+
+    <div class="step slide" data-x="7000" data-y="-1500">
+        <h1>Copy Index to Working Tree</h1>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>git checkout-index --all
+jordane@ivysaur:~/tmp/git-test>ls -a
+./ ../ .git/ some_path/
+jordane@ivysaur:~/tmp/git-test>ls some_path/
+filename
+jordane@ivysaur:~/tmp/git-test>cat some_path/filename
+this is some file data
+jordane@ivysaur:~/tmp/git-test>echo "this is some more file data" >> some_path/filename
+jordane@ivysaur:~/tmp/git-test>git update-index some_path/filename
+jordane@ivysaur:~/tmp/git-test>git write-tree
+04b6cc642b8cee7e5d9a318a14a57b3063f08e7f
+jordane@ivysaur:~/tmp/git-test>git commit-tree -m "second commit" \
+-p ec5141f9cea7967e1078ed3e164f57db8999e229 04b6cc642b8cee7e5d9a318a14a57b3063f08e7f
+71f5f0497d6b95889b1cd121b9ce55ed1e64bb5e
+jordane@ivysaur:~/tmp/git-test>git cat-file -p 71f5f0497d6b95889b1cd121b9ce55ed1e64bb5e
+tree 04b6cc642b8cee7e5d9a318a14a57b3063f08e7f
+parent ec5141f9cea7967e1078ed3e164f57db8999e229
+author Jordan Evans <jordan.evans@rackspace.com> 1375201842 -0700
+committer Jordan Evans <jordan.evans@rackspace.com> 1375201842 -0700
+
+second commit
+</pre></code>
+    </div>
+
+    <div class="step slide" data-x="7500" data-y="-1500">
+        <h1>Commits with Multiple Parents</h1>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>echo "this is the third line of data" >> some_path/filename
+jordane@ivysaur:~/tmp/git-test>git update-index some_path/filename
+jordane@ivysaur:~/tmp/git-test>git write-tree
+6e5620b3e69fb7484c1c5685bed0b4f9d6a79ec3
+jordane@ivysaur:~/tmp/git-test>git commit-tree -m "commits can have multiple parents" \
+-p ec5141f9cea7967e1078ed3e164f57db8999e229 -p 71f5f0497d6b95889b1cd121b9ce55ed1e64bb5e \
+6e5620b3e69fb7484c1c5685bed0b4f9d6a79ec3
+25ba1efa398d45baf1a79c349ed7b178a40cc6d3
+jordane@ivysaur:~/tmp/git-test>git cat-file -p 25ba1efa398d45baf1a79c349ed7b178a40cc6d3
+tree 6e5620b3e69fb7484c1c5685bed0b4f9d6a79ec3
+parent ec5141f9cea7967e1078ed3e164f57db8999e229
+parent 71f5f0497d6b95889b1cd121b9ce55ed1e64bb5e
+author Jordan Evans <jordan.evans@rackspace.com> 1375202309 -0700
+committer Jordan Evans <jordan.evans@rackspace.com> 1375202309 -0700
+
+commits can have multiple parents</pre></code>
+
+    </div>
+
+    <div class="step slide" data-x="8000" data-y="-1500">
+        <h1>Multiple Parents</h1>
+        <p>These are generally called merge commits, because they combine two branches in the tree</p>
+        <p>The only rules are that the commit ancestry cannot form a directed cycle</p>
+        <p>This means Git is just a Directed Acyclic Graph (DAG)</p>
+        <p>Note that the merge commit we made makes little sense: it is incestuous</p>
+        <p>This is okay, because it still forms a DAG</p>
+    </div>
+
+
+    <div class="step slide" data-x="8500" data-y="-1500">
+        <h1>Git Refs</h1>
+        <p>They are symbolic identifiers</p>
+        <p>branches and tags</p>
+        <p>Located in .git/refs/</p>
+        <p>.git/HEAD usually points to a ref</p>
+        <p>refs/heads (branches) point to a commit, and are updated as commits are added</p>
+        <p>refs/tags (tags) always point to the same commit</p>
+        <p>remote refs are stored in .git/refs/remotes/remote_name/</p>
+        <p>Editing these files by hand is generally bad (git porcelain commands do it for you)</p>
+    </div>
+
+    <div class="step slide" data-x="9000" data-y="-1500">
+        <h1>Git Refs</h1>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>cat .git/HEAD
+ref: refs/heads/master
+jordane@ivysaur:~/tmp/git-test>ls .git/refs/heads/
+master
+jordane@ivysaur:~/tmp/git-test>cat .git/refs/heads/master
+
+jordane@ivysaur:~/tmp/git-test>echo "25ba1efa398d45baf1a79c349ed7b178a40cc6d3" \
+> .git/refs/heads/master</pre></code>
+        <p>We just set master to commit 25ba1efa398d45baf1a79c349ed7b178a40cc6d3 by hand</p>
+        <p>There are even plumbing commands to work with refs</p>
+        <p>git-update-ref, git-symbolic-ref</p>
+    </div>
+
+    <div class="step slide" data-x="9500" data-y="-1500">
+        <h1>Rules of Git</h1>
+        <p>Your commits cannot make a cycle</p>
+        <p>But you can't even do this if you tried!</p>
+        <p>There are no other rules in the tools of git plumbing</p>
+    </div>
+
+    <div class="step slide" data-x="10000" data-y="-1500">
+        <h1>Questions?</h1>
+    </div>
+
+    <div class="step slide" data-x="10500" data-y="-1500">
+        <h1>rev-list</h1>
+        <p>Lists commit objects in reverse chronological order</p>
+        <pre><code>jordane@ivysaur:~/tmp/git-test>git rev-list 25ba1efa398d45baf1a79c349ed7b178a40cc6d3
+25ba1efa398d45baf1a79c349ed7b178a40cc6d3
+71f5f0497d6b95889b1cd121b9ce55ed1e64bb5e
+ec5141f9cea7967e1078ed3e164f57db8999e229</pre></code>
+        <p>It can do many more complex cases: If you need a list of commits, rev-list can do it!</p>
+    </div>
+
+    <div class="step slide" data-x="11000" data-y="-1500">
+        <h1>resources</h1>
+        <p><a href="http://preshing.com/20110504/hash-collision-probabilities">hash collision</a></p>
+        <p><a href="http://www.git-scm.com/book">pro git book</a></p>
+        <p><a href="http://tom.preston-werner.com/2009/05/19/the-git-parable.html">Git parable</a></p>
+    </div>
 </div>
 <script>
 if ("ontouchstart" in document.documentElement) { 
@@ -345,94 +443,9 @@ if ("ontouchstart" in document.documentElement) {
 }
 </script>
 
-<!--
-    
-    Last, but not least.
-    
-    To make all described above really work, you need to include impress.js in the page.
-    I strongly encourage to minify it first.
-    
-    In here I just include full source of the script to make it more readable.
-    
-    You also need to call a `impress().init()` function to initialize impress.js presentation.
-    And you should do it in the end of your document. Not only because it's a good practice, but also
-    because it should be done when the whole document is ready.
-    Of course you can wrap it in any kind of "DOM ready" event, but I was too lazy to do so ;)
-    
--->
 <script src="js/impress.js"></script>
 <script>impress().init();</script>
 
-<!--
-    
-    The `impress()` function also gives you access to the API that controls the presentation.
-    
-    Just store the result of the call:
-    
-        var api = impress();
-    
-    and you will get three functions you can call:
-    
-        `api.init()` - initializes the presentation,
-        `api.next()` - moves to next step of the presentation,
-        `api.prev()` - moves to previous step of the presentation,
-        `api.goto( idx | id | element, [duration] )` - moves the presentation to the step given by its index number
-                id or the DOM element; second parameter can be used to define duration of the transition in ms,
-                but it's optional - if not provided default transition duration for the presentation will be used.
-    
-    You can also simply call `impress()` again to get the API, so `impress().next()` is also allowed.
-    Don't worry, it wont initialize the presentation again.
-    
-    For some example uses of this API check the last part of the source of impress.js where the API
-    is used in event handlers.
-    
--->
 
 </body>
 </html>
-
-<!--
-    
-    Now you know more or less everything you need to build your first impress.js presentation, but before
-    you start...
-    
-    Oh, you've already cloned the code from GitHub?
-    
-    You have it open in text editor?
-    
-    Stop right there!
-    
-    That's not how you create awesome presentations. This is only a code. Implementation of the idea that
-    first needs to grow in your mind.
-    
-    So if you want to build great presentation take a pencil and piece of paper. And turn off the computer.
-    
-    Sketch, draw and write. Brainstorm your ideas on a paper. Try to build a mind-map of what you'd like
-    to present. It will get you closer and closer to the layout you'll build later with impress.js.
-    
-    Get back to the code only when you have your presentation ready on a paper. It doesn't make sense to do
-    it earlier, because you'll only waste your time fighting with positioning of useless points.
-    
-    If you think I'm crazy, please put your hands on a book called "Presentation Zen". It's all about 
-    creating awesome and engaging presentations.
-    
-    Think about it. 'Cause impress.js may not help you, if you have nothing interesting to say.
-    
--->
-
-<!--
-    
-    Are you still reading this?
-    
-    For real?
-    
-    I'm impressed! Feel free to let me know that you got that far (I'm @bartaz on Twitter), 'cause I'd like
-    to congratulate you personally :)
-    
-    But you don't have to do it now. Take my advice and take some time off. Make yourself a cup of coffee, tea,
-    or anything you like to drink. And raise a glass for me ;)
-    
-    Cheers!
-    
--->
-
